@@ -1,0 +1,61 @@
+[project]
+name = "dis-bot"
+version = "0.1.0"
+description = "Discord Bot for Nagifans"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "discord-py>=2.7.1",
+    "dnspython>=2.9.1",
+    "loguru>=0.7.3",
+    "pynacl>=1.6.2",
+    "python-dotenv>=1.2.4",
+]
+
+[project.scripts]
+dis-bot = "dis_bot:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.3",
+]
+
+[tool.ruff]
+target-version = "py312"
+extend-exclude = ["app/migration", "dist", "build", "node_modules"]
+
+# --- Lint: 実害系 + FastAPI 向けだけを有効化 ---
+[tool.ruff.lint]
+select = [
+    "D", # pydocstyle（docstringのスタイルチェック）
+    "F", # Pyflakes（未使用/未定義）
+    "I", # import 並べ替え（isort 相当）
+    "UP", # pyupgrade（最新構文へ）
+    "B", # bugbear（バグ誘発パターン）
+    "C4", # 内包表記の最適化
+    "RUF", # Ruff 独自
+    "FAST", # ← FastAPI 向けルール（Annotated 推奨など）
+]
+
+ignore = [
+    "D100", # モジュールの docstring チェックを無効化
+    "D101","D102","D103", # 公開関数の docstring チェックを無効化
+    "D107", # __init__.py の docstring チェックを無効化
+    "D400", # docstringのピリオドを無効化
+    "D415", # docstringの最終行に空行を要求しない
+]
+
+# --- Formatter: ruff format ---
+[tool.ruff.format]
+quote-style = "double"      # Black互換。好みで "preserve" でもOK
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
